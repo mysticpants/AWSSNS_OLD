@@ -17,68 +17,204 @@ This class can be used to perform actions on the AWS SNS service. E.g. subscribi
 
 All parameters are strings. Access keys can be generated with IAM.
 
+#### Example
+
+```squirrel
+const AWS_ACCESS_KEY_ID = "YOUR_KEY_ID_HERE";
+const AWS_SECRET_ACCESS_KEY = "YOUR_KEY_HERE";
+const AWS_REGION = "YOUR_REGION_HERE";
+sns <- AWSSNS(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+
+```
+
+
+
 ### ConfirmSubscription(params, cb)
+Verifies an endpoint owner's intent to receive messages by validating the token sent to the endpoint by an earlier Subscribe action.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ConfirmSubscription.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_ConfirmSubscription.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                 | Type    | Required | Description             
+------------------------- | ------- | -------- | --------------------------
+AuthenticateOnUnsubscribe | String  | No       | Disallows unauthenticated unsubscribes of the subscription. If the value of this parameter is true and the request has an AWS signature, then only the topic owner and the subscription owner can unsubscribe the endpoint. The unsubscribe action requires AWS authentication
+Token					  | String  | Yes      | Short-lived token sent to an endpoint during the Subscribe action
+
+#### Example
+
+```squirrel
+sns.ConfirmSubscription(confirmParams, function(res) {
+	server.log("Confirmation Response: " + http.jsonencode(res));
+});
+
+```
+
+
 
 ### ListSubscriptions(params, cb)
+Returns a list of the requester's subscriptions.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptions.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptions.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                 | Type    | Required | Description             
+------------------------- | ------- | -------- | --------------------------
+NextToken				  | String	| No	   | Token returned by the previous *ListSubscriptions* request.
+
+#### Example
+
+```squirrel
+```
+
+
 
 ### ListSubscriptionsByTopic(params, cb)
+Returns a list of the subscriptions to a specific topic.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptionsByTopic.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                 | Type    | Required | Description             
+------------------------- | ------- | -------- | --------------------------
+NextToken				  | String	| No	   | Token returned by the previous *ListSubscriptionsByTopic* request
+TopicArn				  | String  | Yes      | The ARN of the topic for which you wish to confirm a subscription
+
+#### Example
+
+```squirrel
+```
+
+
 
 ### ListTopics(params, cb)
+Returns a list of the requester's topics.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                 | Type    | Required | Description             
+------------------------- | ------- | -------- | --------------------------
+NextToken				  | String	| No	   | Token returned by the previous ListTopics request.
+
+#### Example
+
+```squirrel
+```
+
+
 
 ### Publish(params, cb)
+Sends a message to an Amazon SNS topic or sends a text message (SMS message) directly to a phone number.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Publish.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_Publish.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                | Type    | Required | Description             
+------------------------ | ------- | -------- | --------------------------
+messages				 | String  | Yes	  | The message you want to send
+MessageAttributes		 | String  | No 	  | MessageAttributes.entry.N.Name (key)
+MessageAttributesentry.N.Value (value) pairs. see MessageAttributeValue table for info
+MessageStructure		 | String  | No 	  |
+PhoneNumber				 | String  | No 	  | The phone number to which you want to deliver an SMS message
+Subject					 | String  | No 	  | Optional parameter to be used as the "Subject" line when the message is delivered to email endpoints
+TargetArn				 | String  | No 	  | Either TopicArn or EndpointArn, but not both
+TopicArn				 | String  | No 	  | The topic you want to publish to
+
+Note : You need at least one of TopicArn parameter, PhoneNumber or TargetArn parameters.
+
+#### MessageAttributeValue
+
+Parameter                | Type    						 	 | Required | Description             
+------------------------ | --------------------------------  | -------- | --------------------------
+BinaryValue				 | Base64-encoded binary data object | No		| Binary type attributes can store any binary data, for example, compressed data, encrypted data, or images
+DataType			     | String	 						 | Yes		| Amazon SNS supports the following logical data types: String, Number, and Binary
+StringValue				 | String		  					 | No		| Strings are Unicode with UTF8 binary encoding
+
+#### Example
+
+```squirrel
+```
+
+
 
 ### Subscribe(params, cb)
+Prepares to subscribe an endpoint by sending the endpoint a confirmation message.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                | Type    | Required | Description             
+------------------------ | ------- | -------- | --------------------------
+Endpoint				 | String  | No 	  | The endpoint that you want to receive notifications. Endpoints vary by protocol:
+Protocol				 | String  | Yes	  | The protocol you want to use. Supported protocols include: http, https, email, email-json, sms, sqs, application and lambda
+TopicArn				 | String  | Yes 	  | The topic you want to publish to
+
+#### Example
+
+```squirrel
+subscribeParams <- {
+    "Protocol": "https",
+    "TopicArn": "YOUR_TOPIC_ARN_HERE",
+    "Endpoint": http.agenturl()
+}
+
+sns.Subscribe(subscribeParams, function(res) {
+    server.log("Subscribe Response: " + http.jsonencode(res));
+});
+
+```
+
 
 ### Unsubscribe(params, cb)
+Deletes a subscription.
+For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Unsubscribe.html
 
-http://docs.aws.amazon.com/sns/latest/api/API_Unsubscribe.html
-
- Parameter       |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
-**params** | table         | Table of parameters (See API Reference)
+**params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
+
+where `params` includes
+
+Parameter                | Type    | Required | Description             
+------------------------ | ------- | -------- | --------------------------
+SubscriptionArn			 | String  | Yes 	  | The ARN of the subscription to be deleted
+
+#### Example
+
+```squirrel
+```
+
 
 
 ## Example
