@@ -11,12 +11,11 @@ class AWSSNS {
     static TARGET_PREFIX = "SNS_20100331";
 
     _awsRequest = null;
-
-    /**
-     * @param {string} region
-     * @param {string} accessKeyId
-     * @param {string} secretAccessKey
-     */
+    //==========================================================================
+     // @param {string} region
+     // @param {string} accessKeyId
+     // @param {string} secretAccessKey
+    //==========================================================================
     constructor(region, accessKeyId, secretAccessKey) {
         if ("AWSRequestV4" in getroottable()) {
             _awsRequest = AWSRequestV4(SERVICE, region, accessKeyId, secretAccessKey);
@@ -25,10 +24,10 @@ class AWSSNS {
         }
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function ConfirmSubscription(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -44,10 +43,10 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function ListSubscriptions(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -63,10 +62,10 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function ListSubscriptionsByTopic(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -82,10 +81,10 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function ListTopics(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -101,10 +100,10 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function Publish(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -120,10 +119,10 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function Subscribe(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -139,10 +138,10 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    /**
-     * @param {table} params
-     * @param {function} cb
-     */
+    //==========================================================================
+     // @param {table} params
+     // @param {function} cb
+    //==========================================================================
     function Unsubscribe(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
