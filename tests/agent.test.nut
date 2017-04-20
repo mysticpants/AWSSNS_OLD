@@ -91,7 +91,7 @@ class AgentTestCase extends ImpTestCase {
         return Promise(function(resolve, reject) {
 
 
-            // initialize an asychronous function to receive the token necessary for a confirmation of a subscription
+            // initialise an asynchronous function to receive the token necessary for a confirmation of a subscription
             http.onrequest(function(request, response) {
 
                 try {
@@ -415,11 +415,8 @@ class AgentTestCase extends ImpTestCase {
                     reject(e);
                 }
 
-
             }.bindenv(this));
         }.bindenv(this));
-
-
     }
 
 

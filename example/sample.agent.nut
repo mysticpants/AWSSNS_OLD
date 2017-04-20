@@ -39,7 +39,7 @@ http.onrequest(function(request, response) {
                     "Token": requestBody.Token,
                     "TopicArn": requestBody.TopicArn
                 }
-                // confirm the subscription
+            // confirm the subscription
             sns.ConfirmSubscription(confirmParams, function(res) {
 
                 server.log("Confirmation Response: " + res.statuscode);
