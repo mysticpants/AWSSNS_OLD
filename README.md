@@ -68,7 +68,7 @@ http.onrequest(function(request, response) {
                 "TopicArn": requestBody.TopicArn
             }
             sns.ConfirmSubscription(confirmParams, function(res) {
-                
+
                 server.log("Confirmation Response: " +res.statuscode);                
             });
         }
@@ -133,13 +133,31 @@ TopicArn				  | String  | Yes      | The ARN of the topic for which you wish to 
 #### Example
 
 ```squirrel
+// find the endpoint in the response that corresponds to ARN
+local endpointFinder = function(messageBody) {
+	local endpoint = http.agenturl();
+	local start = messageBody.find(endpoint);
+	start = start + endpoint.len();
+	return start;
+}
+
+// finds the SubscriptionArn corresponding to the specified endpoint
+local subscriptionFinder = function(messageBody, startIndex) {
+	local start = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_START, startIndex);
+	local finish = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_FINISH, startIndex);
+	local subscription = messageBody.slice((start + 17), (finish));
+	return subscription;
+}
+
 local Params = {
-	"TopicArn":
+	"TopicArn": "YOUR_TOPIC_ARN_HERE"
 }
 
 sns.ListSubscriptionsByTopic(Params, function(res){
 
-	// do something with res.body the returned xml
+	// finds your specific subscriptionArn
+	local subscriptionArn == subscriptionFinder(res.body, endpointFinder(res.body))
+
 }
 ```
 
