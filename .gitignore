@@ -3,8 +3,6 @@
 *.out
 .build_api_key.json
 *.swp
-test*
 src/vars.nut
-example*
 .imptest
 AWSRequestV4.class.nut
