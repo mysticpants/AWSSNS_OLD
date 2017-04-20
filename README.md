@@ -68,6 +68,7 @@ http.onrequest(function(request, response) {
                 "TopicArn": requestBody.TopicArn
             }
             sns.ConfirmSubscription(confirmParams, function(res) {
+                
                 server.log("Confirmation Response: " +res.statuscode);                
             });
         }
@@ -287,7 +288,7 @@ local params = {
 
 
 #### Response Table
-The format of the response table
+The format of the response table general to all functions
 
 Key		              |       Type     | Description
 --------------------- | -------------- | -----------
