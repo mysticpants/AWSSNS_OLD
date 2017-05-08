@@ -38,14 +38,14 @@ sns <- AWSSNS(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 Verifies an endpoint owner's intent to receive messages by validating the token sent to the endpoint by an earlier Subscribe action.
 For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ConfirmSubscription.html
 
- Key 	               |       Type     | Description
+ Parameter 	           |       Type     | Description
 ---------------------- | -------------- | -----------
 **params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
 
 where `params` includes
 
-Key 	                  | Type    | Required | Description             
+ Parameter 	              | Type    | Required | Description             
 ------------------------- | ------- | -------- | --------------------------
 AuthenticateOnUnsubscribe | String  | No       | Disallows unauthenticated unsubscribes of the subscription. If the value of this parameter is true and the request has an AWS signature, then only the topic owner and the subscription owner can unsubscribe the endpoint. The unsubscribe action requires AWS authentication
 Token					  | String  | Yes      | Short-lived token sent to an endpoint during the Subscribe action
@@ -88,14 +88,14 @@ http.onrequest(function(request, response) {
 Returns a xml list of the requester's subscriptions as a string in the response table.
 For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ListSubscriptions.html
 
- Key 	               |       Type     | Description
+ Parameter 	           | Type  		    | Description
 ---------------------- | -------------- | -----------
 **params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
 
 where `params` includes
 
-Key 	                  | Type    | Required | Description             
+Parameter 	              | Type    | Required | Description             
 ------------------------- | ------- | -------- | --------------------------
 NextToken				  | String	| No	   | Token returned by the previous *ListSubscriptions* request.
 
@@ -123,7 +123,7 @@ For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ListSubs
 
 where `params` includes
 
-Key		                  | Type    | Required | Description             
+Parameter	              | Type    | Required | Description             
 ------------------------- | ------- | -------- | --------------------------
 NextToken				  | String	| No	   | Token returned by the previous *ListSubscriptionsByTopic* request
 TopicArn				  | String  | Yes      | The ARN of the topic for which you wish to confirm a subscription
@@ -135,6 +135,7 @@ TopicArn				  | String  | Yes      | The ARN of the topic for which you wish to 
 ```squirrel
 // find the endpoint in the response that corresponds to ARN
 local endpointFinder = function(messageBody) {
+
 	local endpoint = http.agenturl();
 	local start = messageBody.find(endpoint);
 	start = start + endpoint.len();
@@ -143,6 +144,7 @@ local endpointFinder = function(messageBody) {
 
 // finds the SubscriptionArn corresponding to the specified endpoint
 local subscriptionFinder = function(messageBody, startIndex) {
+    
 	local start = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_START, startIndex);
 	local finish = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_FINISH, startIndex);
 	local subscription = messageBody.slice((start + 17), (finish));
@@ -167,14 +169,14 @@ sns.ListSubscriptionsByTopic(Params, function(res){
 Returns a xml list of the requester's topics as a string in the response table.
 For more information see: http://docs.aws.amazon.com/sns/latest/api/API_ListTopics.html
 
- Key             	   |       Type     | Description
+ Parameter         	   |       Type     | Description
 ---------------------- | -------------- | -----------
 **params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
 
 where `params` includes
 
-Key                       | Type    | Required | Description             
+Parameter                 | Type    | Required | Description             
 ------------------------- | ------- | -------- | --------------------------
 NextToken				  | String	| No	   | Token returned by the previous ListTopics request.
 
@@ -196,14 +198,14 @@ sns.ListTopics({}, function(res){
 Sends a message to an Amazon SNS topic or sends a text message (SMS message) directly to a phone number.
 For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Publish.html
 
- Key       	           |       Type     | Description
+ Parameter             |       Type     | Description
 ---------------------- | -------------- | -----------
 **params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
 
 where `params` includes
 
-Key         	         | Type    | Required | Description             
+Parameter                | Type    | Required | Description             
 ------------------------ | ------- | -------- | --------------------------
 Message 				 | String  | Yes	  | The message you want to send
 MessageAttributes		 | String  | No 	  | MessageAttributes.entry.N.Name (key), MessageAttributesentry.N.Value (value) pairs. see MessageAttributeValue table for more information
@@ -217,7 +219,7 @@ Note : You need at least one of TopicArn, PhoneNumber or TargetArn parameters.
 
 #### MessageAttributeValue
 
-Key                      | Type    						 	 | Required | Description             
+Parameter                | Type    						 	 | Required | Description             
 ------------------------ | --------------------------------  | -------- | --------------------------
 BinaryValue				 | Base64-encoded binary data object | No		| Binary type attributes can store any binary data, for example, compressed data, encrypted data, or images
 DataType			     | String	 						 | Yes		| Amazon SNS supports the following logical data types: String, Number, and Binary
@@ -246,14 +248,14 @@ sns.Publish(params, function (res) {
 Prepares to subscribe an endpoint by sending the endpoint a confirmation message.
 For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html
 
- Key 	               |       Type     | Description
+ Parameter 	           |       Type     | Description
 ---------------------- | -------------- | -----------
 **params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
 
 where `params` includes
 
-Key		                 | Type    | Required | Description             
+Parameter	             | Type    | Required | Description             
 ------------------------ | ------- | -------- | --------------------------
 Endpoint				 | String  | No 	  | The endpoint that you want to receive notifications. Endpoints vary by protocol:
 Protocol				 | String  | Yes	  | The protocol you want to use. Supported protocols include: http, https, email, email-json, sms, sqs, application and lambda
@@ -281,7 +283,7 @@ sns.Subscribe(subscribeParams, function(res) {
 Deletes a subscription.
 For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Unsubscribe.html
 
- Key 	               |       Type     | Description
+ Parameter 	               |       Type     | Description
 ---------------------- | -------------- | -----------
 **params**             | table          | Table of parameters (See API Reference)
 **cb**                 | function       | Callback function that takes one parameter (a response table)
@@ -289,7 +291,7 @@ For more information see: http://docs.aws.amazon.com/sns/latest/api/API_Unsubscr
 
 where `params` includes
 
-Key              	     | Type    | Required | Description             
+Parameter                | Type    | Required | Description             
 ------------------------ | ------- | -------- | --------------------------
 SubscriptionArn			 | String  | Yes 	  | The ARN of the subscription to be deleted
 
@@ -308,7 +310,7 @@ local params = {
 #### Response Table
 The format of the response table general to all functions
 
-Key		              |       Type     | Description
+Parameter		      |       Type     | Description
 --------------------- | -------------- | -----------
 body				  | String         | SNS response in a XML data structure which is received as a string.
 statuscode			  | Integer		   | http status code
@@ -316,7 +318,7 @@ headers				  | Table		   | see headers
 
 where `headers` includes
 
-Key		              |       Type     | Description
+Parameter		      |       Type     | Description
 --------------------- | -------------- | -----------
 x-amzn-requestid	  | String		   | Amazon request id
 content-type		  | String		   | Content type e.g text/XML
