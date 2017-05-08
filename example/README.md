@@ -27,4 +27,4 @@ AWS_SNS_SECRET_ACCESS_KEY   | IAM Secret Access Key
 AWS_SNS_TOPIC_ARN			| Your SNS TOPIC ARN
 
 
-The AWSSQS library is licensed under the [MIT License](../LICENSE).
+The AWSSNS library is licensed under the [MIT License](../LICENSE).

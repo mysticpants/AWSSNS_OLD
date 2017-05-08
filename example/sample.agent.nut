@@ -8,6 +8,7 @@ const AWS_SNS_TEST_REGION = "YOUR_REGION_HERE"
 const AWS_SNS_ACCESS_KEY_ID = "YOUR_AWS_ACCESS_KEY_HERE";
 const AWS_SNS_SECRET_ACCESS_KEY = "YOUR_AWS_SECRET_ACCESS_KEY_HERE";
 const AWS_SNS_TOPIC_ARN = "YOUR_TOPIC_ARN_HERE";
+
 // initialise the class
 sns <- AWSSNS(AWS_SNS_TEST_REGION, AWS_SNS_ACCESS_KEY_ID, AWS_SNS_SECRET_ACCESS_KEY);
 
@@ -29,7 +30,6 @@ PublishParams <- {
 http.onrequest(function(request, response) {
 
     try {
-
         local requestBody = http.jsondecode(request.body);
 
         // Handle an SES SubscriptionConfirmation request
@@ -52,9 +52,7 @@ http.onrequest(function(request, response) {
                 }
             });
         }
-
         response.send(200, "OK");
-
     } catch (exception) {
         server.log("Error handling HTTP request: " + exception);
         response.send(500, "Internal Server Error: " + exception);
@@ -64,5 +62,6 @@ http.onrequest(function(request, response) {
 
 // Subscribe to a topic
 sns.Subscribe(subscribeParams, function(res) {
+
     server.log("Subscribe Response: " + res.statuscode);
 });

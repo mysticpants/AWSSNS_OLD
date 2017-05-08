@@ -35,7 +35,8 @@ class AgentTestCase extends ImpTestCase {
 
 
 
-    // test the subscribe function receives the appropriate http response
+    // test the subscribe function
+	// checks that it receives a successful http response
     // also check that the subscription arn has not been assigned yet
     function testSubscribe() {
 
@@ -71,11 +72,15 @@ class AgentTestCase extends ImpTestCase {
 
 
     // test the confirming of a subscription
+	// checks that it no longer pending a subscription
+	// checks for a successful http response
     function testConfirmSubsription() {
+
         local firstInstanceConfirmation = true; // only want to perform the assertions once
 
         // finds the subscription ID,
         local subscriptionFinder = function(messageBody) {
+
             local start = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_START);
             local finish = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_FINISH);
             local subscription = messageBody.slice((start + 17), (finish));
@@ -103,6 +108,7 @@ class AgentTestCase extends ImpTestCase {
                             "TopicArn": requestBody.TopicArn
                         }
                         _sns.ConfirmSubscription(confirmParams, function(res) {
+
                             try {
                                 if (firstInstanceConfirmation == true) {
                                     _subscriptionArn = subscriptionFinder(res.body);
@@ -137,6 +143,7 @@ class AgentTestCase extends ImpTestCase {
 
         // find the endpoint in the response that corresponds to ARN
         local endpointFinder = function(messageBody) {
+
             local endpoint = http.agenturl();
             local start = messageBody.find(endpoint);
             start = start + endpoint.len();
@@ -145,6 +152,7 @@ class AgentTestCase extends ImpTestCase {
 
         // finds the SubscriptionArn corresponding to the specified endpoint
         local subscriptionFinder = function(messageBody, startIndex) {
+
             local start = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_START, startIndex);
             local finish = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_FINISH, startIndex);
             local subscription = messageBody.slice((start + 17), (finish));
@@ -171,6 +179,7 @@ class AgentTestCase extends ImpTestCase {
     // test the list of subscriptions for a specific topic, checking against the status code
     // also checking if the subscription we put in the topic is retrievable
     function testListSubscriptionsTopic() {
+
         local Params = {
             "TopicArn": AWS_SNS_TOPIC_ARN
         }
@@ -178,6 +187,7 @@ class AgentTestCase extends ImpTestCase {
 
         // find the endpoint in the response that corresponds to ARN
         local endpointFinder = function(messageBody) {
+
             local endpoint = http.agenturl();
             local start = messageBody.find(endpoint);
             start = start + endpoint.len();
@@ -217,6 +227,7 @@ class AgentTestCase extends ImpTestCase {
         return Promise(function(resolve, reject) {
 
             _sns.ListTopics({}, function(res) {
+
                 try {
                     this.assertTrue(res.body.find(AWS_SNS_TOPIC_ARN) != null, "TopicArn not found");
                     this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, "Actual response " + res.statuscode);
@@ -319,7 +330,8 @@ class AgentTestCase extends ImpTestCase {
 
 
 
-    // test obtaining a list of subscriptions for a an invaldi topic
+    // test obtaining a list of subscriptions for a an invalid topic
+	// tests by confirming a http bad request status
     function testFailListSubscriptionTopic() {
 
         // params with an invalid topic
@@ -397,6 +409,7 @@ class AgentTestCase extends ImpTestCase {
 
     // test publishing to a non existent topicArn, should receive a http status code 400
     function testFailPublish() {
+
         // required params to publish
         local params = {
             "Message": AWS_SNS_MESSAGE,
