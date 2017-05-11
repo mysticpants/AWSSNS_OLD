@@ -4,7 +4,7 @@ To add this library to your model, add the following lines to the top of your ag
 
 ```
 #require "AWSRequestV4.class.nut:1.0.2"
-#require "AWSSNS.class.nut:1.0.0"
+#require "AWSSNS.lib.nut:1.0.0"
 ```
 
 **Note: [AWSRequestV4](https://github.com/electricimp/AWSRequestV4/) must be loaded.**
@@ -53,7 +53,7 @@ Token					  | String  | Yes      | Short-lived token sent to an endpoint during 
 #### Example
 
 ```squirrel
-http.onrequest(function(request, response) {
+http.onrequest(function (request, response) {
 
     try {
 
@@ -67,7 +67,7 @@ http.onrequest(function(request, response) {
                 "Token": requestBody.Token,
                 "TopicArn": requestBody.TopicArn
             }
-            sns.ConfirmSubscription(confirmParams, function(res) {
+            sns.ConfirmSubscription(confirmParams, function (res) {
 
                 server.log("Confirmation Response: " +res.statuscode);                
             });
@@ -104,10 +104,10 @@ NextToken				  | String	| No	   | Token returned by the previous *ListSubscripti
 #### Example
 
 ```squirrel
-sns.ListSubscriptions({}, function(res){
+sns.ListSubscriptions({}, function (res){
 
 	// do something with res.body the returned xml
-}
+})
 ```
 
 
@@ -134,7 +134,7 @@ TopicArn				  | String  | Yes      | The ARN of the topic for which you wish to 
 
 ```squirrel
 // find the endpoint in the response that corresponds to ARN
-local endpointFinder = function(messageBody) {
+local endpointFinder = function (messageBody) {
 
 	local endpoint = http.agenturl();
 	local start = messageBody.find(endpoint);
@@ -143,7 +143,7 @@ local endpointFinder = function(messageBody) {
 }
 
 // finds the SubscriptionArn corresponding to the specified endpoint
-local subscriptionFinder = function(messageBody, startIndex) {
+local subscriptionFinder = function (messageBody, startIndex) {
     
 	local start = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_START, startIndex);
 	local finish = messageBody.find(AWS_SNS_SUBSCRIPTION_ARN_FINISH, startIndex);
@@ -155,12 +155,12 @@ local Params = {
 	"TopicArn": "YOUR_TOPIC_ARN_HERE"
 }
 
-sns.ListSubscriptionsByTopic(Params, function(res){
+sns.ListSubscriptionsByTopic(Params, function (res) {
 
 	// finds your specific subscriptionArn
 	local subscriptionArn == subscriptionFinder(res.body, endpointFinder(res.body))
 
-}
+})
 ```
 
 
@@ -186,10 +186,10 @@ NextToken				  | String	| No	   | Token returned by the previous ListTopics requ
 #### Example
 
 ```squirrel
-sns.ListTopics({}, function(res){
+sns.ListTopics({}, function (res) {
 
 	// do something with res.body the returned xml
-}
+})
 ```
 
 
@@ -236,9 +236,8 @@ local params = {
 }
 
 sns.Publish(params, function (res) {
-
 	// check the status code for a successful publish res.statuscode
-}
+})
 
 ```
 
@@ -272,7 +271,7 @@ subscribeParams <- {
     "Endpoint": http.agenturl()
 }
 
-sns.Subscribe(subscribeParams, function(res) {
+sns.Subscribe(subscribeParams, function (res) {
     server.log("Subscribe Response: " + http.jsonencode(res));
 });
 ```

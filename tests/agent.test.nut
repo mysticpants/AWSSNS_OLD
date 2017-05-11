@@ -26,14 +26,14 @@ const AWS_SNS_MESSAGE = "Hello World";
 
 
 class AgentTestCase extends ImpTestCase {
+
     _sns = null;
     _subscriptionArn = null;
+
     // setup initialising
     function setUp() {
         _sns = AWSSNS(AWS_SNS_TEST_REGION, AWS_SNS_ACCESS_KEY_ID, AWS_SNS_SECRET_ACCESS_KEY);
     }
-
-
 
     // test the subscribe function
 	// checks that it receives a successful http response
@@ -74,7 +74,7 @@ class AgentTestCase extends ImpTestCase {
     // test the confirming of a subscription
 	// checks that it no longer pending a subscription
 	// checks for a successful http response
-    function testConfirmSubsription() {
+    function testConfirmSubscription() {
 
         local firstInstanceConfirmation = true; // only want to perform the assertions once
 
@@ -99,9 +99,11 @@ class AgentTestCase extends ImpTestCase {
             // initialise an asynchronous function to receive the token necessary for a confirmation of a subscription
             http.onrequest(function(request, response) {
 
+                response.send(200, "OK");
+                
                 try {
-                    local requestBody = http.jsondecode(request.body);
                     // Handle an SES SubscriptionConfirmation request
+                    local requestBody = http.jsondecode(request.body);
                     if ("Type" in requestBody && requestBody.Type == "SubscriptionConfirmation") {
                         local confirmParams = {
                             "Token": requestBody.Token,
@@ -122,7 +124,6 @@ class AgentTestCase extends ImpTestCase {
                             }
                         }.bindenv(this));
                     }
-                    response.send(200, "OK");
                 } catch (e) {
                     reject(e);
                 }

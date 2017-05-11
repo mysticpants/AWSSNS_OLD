@@ -1,5 +1,5 @@
 #require "AWSRequestV4.class.nut:1.0.2"
-#require "AWSSNS.class.nut:1.0.0"
+#require "AWSSNS.lib.nut:1.0.0"
 
 
 
@@ -62,6 +62,5 @@ http.onrequest(function(request, response) {
 
 // Subscribe to a topic
 sns.Subscribe(subscribeParams, function(res) {
-
     server.log("Subscribe Response: " + res.statuscode);
 });
