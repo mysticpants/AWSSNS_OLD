@@ -5,7 +5,6 @@ const AWS_SNS_SECRET_ACCESS_KEY = "YOUR_AWS_SECRET_ACCESS_KEY_HERE";
 const AWS_SNS_TOPIC_ARN = "YOUR_TOPIC_ARN_HERE";
 
 
-
 // HTTP status codes
 const AWS_TEST_HTTP_RESPONSE_SUCCESS = 200;
 const AWS_TEST_HTTP_RESPONSE_FORBIDDEN = 403;
@@ -202,8 +201,14 @@ class AgentTestCase extends ImpTestCase {
         // find the endpoint in the response that corresponds to ARN
         local endpointFinder = function(messageBody, endpoint) {
             local start = messageBody.find(endpoint);
-            start = start + endpoint.len();
-            return start;
+            if (start == null) {
+                return null;
+            }
+            else {
+                start = start + endpoint.len();
+                return start;
+            }
+
         }
 
         // finds the SubscriptionArn corresponding to the specified endpoint
@@ -214,20 +219,38 @@ class AgentTestCase extends ImpTestCase {
             local subscription = messageBody.slice((start + 17), (finish));
             return subscription;
         }
+
         return Promise(function(resolve, reject) {
 
-            // waits to ensure list is ready
             imp.wakeup(5, function() {
                 _sns.ListSubscriptions({}, function(res) {
 
-                    try {
+                    if(endpointFinder(res.body, _endpoint) == null) {
+                        imp.wakeup(5, function() {
 
-                        this.assertTrue(_subscriptionArn == subscriptionFinder(res.body, endpointFinder(res.body, _endpoint)), "desired Arn " + _subscriptionArn + " Actual Arn " + subscriptionFinder(res.body, endpointFinder(res.body, _endpoint)));
-                        this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, "Actual response " + res.statuscode);
-                        resolve();
-                    } catch (e) {
-                        reject(e);
+                            _sns.ListSubscriptions({}, function(res) {
+
+                                try {
+                                    this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, "Actual response " + res.statuscode);
+                                    resolve();
+                                } catch (e) {
+                                    reject(e);
+                                }
+
+                            }.bindenv(this));
+                        }.bindenv(this))
+
                     }
+                    else {
+                        try {
+                            this.assertTrue(_subscriptionArn == subscriptionFinder(res.body, endpointFinder(res.body, _endpoint)), "desired Arn " + _subscriptionArn + " Actual Arn " + subscriptionFinder(res.body, endpointFinder(res.body, _endpoint)));
+                            this.assertTrue(res.statuscode == AWS_TEST_HTTP_RESPONSE_SUCCESS, "Actual response " + res.statuscode);
+                            resolve();
+                        } catch (e) {
+                            reject(e);
+                        }
+                    }
+
                 }.bindenv(this));
 
             }.bindenv(this));
@@ -235,7 +258,6 @@ class AgentTestCase extends ImpTestCase {
         }.bindenv(this));
 
     }
-
 
 
     // uses the subscription initialised in setup
@@ -525,6 +547,23 @@ class AgentTestCase extends ImpTestCase {
 
     }
 
+
+
+    // cleanup after
+	function tearDown() {
+
+		local params = {
+            "SubscriptionArn": _subscriptionArn
+        }
+
+        return Promise(function(resolve, reject) {
+
+            _sns.Unsubscribe(params, function(res) {
+
+				resolve();
+            }.bindenv(this));
+        }.bindenv(this));
+	}
 
 
 }
