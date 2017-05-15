@@ -25,7 +25,7 @@
 
 class AWSSNS {
 
-    static version = "1.0.0";
+    static VERSION = "1.0.0";
 
     static SERVICE = "sns";
     static TARGET_PREFIX = "SNS_20100331";
