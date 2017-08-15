@@ -25,19 +25,16 @@
 
 class AWSSNS {
 
-
     static VERSION = "1.0.0";
-
-
     static SERVICE = "sns";
     static TARGET_PREFIX = "SNS_20100331";
 
-    _awsRequest = null;
-    //==========================================================================
-    // @param {string} region
-    // @param {string} accessKeyId
-    // @param {string} secretAccessKey
-    //==========================================================================
+    _awsRequest = null;    // the aws request object
+
+    // 	Parameters:
+    //	 region				AWS region
+    //   accessKeyId		AWS access key Id
+    //   secretAccessKey    AWS secret access key
     constructor(region, accessKeyId, secretAccessKey) {
         if ("AWSRequestV4" in getroottable()) {
             _awsRequest = AWSRequestV4(SERVICE, region, accessKeyId, secretAccessKey);
@@ -46,10 +43,13 @@ class AWSSNS {
         }
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+    //	Verifies an endpoint owner's intent to receive messages by validating
+    //   the token sent to the endpoint by an earlier Subscribe action
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function ConfirmSubscription(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -65,10 +65,12 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+    //	Returns a xml list of the requester's subscriptions as a string in the response table
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function ListSubscriptions(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -84,10 +86,13 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+    //	Returns a xml list of the requester's subscriptions as a string in
+    //  the response table
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function ListSubscriptionsByTopic(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -103,10 +108,15 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+
+    //	Returns a xml list of the requester's topics as a string
+    //   in the response table.
+
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function ListTopics(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -122,10 +132,13 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+    //	Sends a message to an Amazon SNS topic or sends a text message
+    //   (SMS message) directly to a phone number.
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function Publish(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -141,10 +154,13 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+    //	Prepares to subscribe an endpoint by sending the endpoint a
+    //   confirmation message.
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function Subscribe(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
@@ -160,10 +176,12 @@ class AWSSNS {
         _awsRequest.post("/", headers, http.urlencode(body), cb);
     }
 
-    //==========================================================================
-    // @param {table} params
-    // @param {function} cb
-    //==========================================================================
+    //	Deletes a subscription
+    //
+    // 	Parameters:
+    //    params				table of parameters to be sent as part of the request
+    //    cb                    callback function to be called when response received
+    //							from aws
     function Unsubscribe(params, cb) {
         local headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
